@@ -21,21 +21,17 @@ export const GlobalStyle = createGlobalStyle`
 `;
 
 export const Wrapper = styled.div`
-  div {
-    display: flex;
-    justify-content: center;
-  }
-  table {
-    margin-top: 60px;
+  .listCon {
+    margin-left:10%;
+    margin-right:10%;
+    margin-top:30px;
   }
 `;
 
 export const ButtonWrapper = styled.div`
   .add-btn {
-    position: absolute;
-    top: 20px;
-    right: 16%;
-    margin-bottom: 20px;
+    float:right;
+    margin-bottom: 10px;
     border: none;
     outline: none;
   }

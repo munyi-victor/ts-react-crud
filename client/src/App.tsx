@@ -1,15 +1,18 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 
 import AddButton from "./components/AddButton";
+import EmployeeList from "./components/EmployeeList";
+import AddMemberForm from "./components/AddMemberForm";
 
 import { GlobalStyle, Wrapper } from "./App.styles";
-import { Container, Button } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 
-import { Member } from "./types/types";
+import { Member, PageEnum } from "./types/types";
 
 function App() {
-  const [members, setMembers] = useState([]);
+  const [members, setMembers] = useState<Member[]>([]);
+  const [shownPage, setShownPage] = useState(PageEnum.list);
 
   useEffect(() => {
     const getMembers = async () => {
@@ -22,39 +25,39 @@ function App() {
     };
 
     getMembers();
-  }, []);
+  }, [members]);
+
+  const deleteMember = async(memId:number) => {
+    try {
+      const response = await axios.delete(`http://localhost:5000/members/${memId}`);
+      setMembers([...members, response.data]);
+      alert("Member deleted successfully!");
+    } catch (error) {
+      console.error("Error deleting member", error);
+    }
+  }
+
+  const showAddPage = () => {
+    setShownPage(PageEnum.add);
+  }
+
+  const backBtn = () => {
+    setShownPage(PageEnum.list);
+  }
 
   return (
     <Container>
       <GlobalStyle />
       <Wrapper>
-        <div>
-          <AddButton />
-          <table className="border shadow-sm w-75">
-            <tr className="border">
-              <th className="border p-2">Name</th>
-              <th className="border p-2">Email</th>
-              <th className="border p-2">Actions</th>
-            </tr>
-            {members.length > 0 ? (
-              members.map((member: Member) => (
-                <tr key={member.id} className="border">
-                  <td className="border p-2">
-                    {member.firstName} {member.lastName}
-                  </td>
-                  <td className="border p-2">{member.email}</td>
-                  <td className="border p-2">
-                    <div style={{ display: "flex", gap: 20 }}>
-                      <Button variant="success">View</Button>
-                      <Button variant="danger">Delete</Button>
-                    </div>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <p>Loading data...</p>
-            )}
-          </table>
+        <div className="listCon">
+          {shownPage === PageEnum.list && (
+            <div>
+              <AddButton showAddPage={showAddPage} />
+              <EmployeeList members={members} deleteMember={deleteMember} />
+            </div>
+          )}
+
+          {shownPage === PageEnum.add && <AddMemberForm backBtn={backBtn} />}
         </div>
       </Wrapper>
     </Container>

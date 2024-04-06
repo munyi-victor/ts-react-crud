@@ -4,7 +4,13 @@ import axios from "axios";
 
 import { FormData } from "../types/types";
 
-const AddMemberForm: React.FC = () => {
+type Props = {
+  backBtn: () => void;
+}
+const AddMemberForm = (props: Props) => {
+  // : React.FC
+  const { backBtn } = props;
+
   const [formData, setFormData] = useState<FormData>({
     firstName: "",
     lastName: "",
@@ -23,7 +29,10 @@ const AddMemberForm: React.FC = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post("http://localhost:5000/members", formData);
+      const response = await axios.post(
+        "http://localhost:5000/members",
+        formData
+      );
       console.log(response.data);
     } catch (error) {
       console.error("Error adding member", error);
@@ -35,12 +44,15 @@ const AddMemberForm: React.FC = () => {
       email: "",
     });
 
-    console.log(formData);
+    backBtn();
   };
 
   return (
     <Form onSubmit={handleSubmit}>
-      <Form.Group controlId="formFirstName">
+      <div className="text-center">
+        <h3>Add Member</h3>
+      </div>
+      <Form.Group controlId="formFirstName" className="mb-2">
         <Form.Label>First Name</Form.Label>
         <Form.Control
           type="text"
@@ -51,7 +63,7 @@ const AddMemberForm: React.FC = () => {
         />
       </Form.Group>
 
-      <Form.Group controlId="formLastName">
+      <Form.Group controlId="formLastName" className="mb-2">
         <Form.Label>Last Name</Form.Label>
         <Form.Control
           type="text"
@@ -73,9 +85,15 @@ const AddMemberForm: React.FC = () => {
         />
       </Form.Group>
 
-      <Button variant="primary" type="submit">
-        Submit
-      </Button>
+      <div className="mt-3 d-flex gap-3">
+        <Button variant="primary" type="button" onClick={backBtn}>
+          Back
+        </Button>
+
+        <Button variant="success" type="submit">
+          Add Member
+        </Button>
+      </div>
     </Form>
   );
 };
