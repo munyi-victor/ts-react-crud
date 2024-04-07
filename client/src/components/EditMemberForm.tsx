@@ -3,7 +3,7 @@ import axios from "axios";
 
 import { Button, Form } from "react-bootstrap";
 
-import { FormData, Member } from "../types/types";
+import { FormData, Member } from '../types/types';
 
 type Props = {
   backBtn: () => void;
@@ -21,7 +21,7 @@ const EditMemberFrom = (props: Props) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({
-      [...formData],
+      ...formData,
       [name]: value,
     });
   };
@@ -35,6 +35,9 @@ const EditMemberFrom = (props: Props) => {
         formData
       );
       console.log(response.data);
+      alert("Member details updated successfully!");
+      backBtn();
+
     } catch (error) {
       console.error("Error editing member details", error);
     }

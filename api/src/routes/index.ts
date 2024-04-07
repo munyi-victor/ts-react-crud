@@ -63,17 +63,19 @@ router.delete("/members/:id", async (req, res) => {
 })
 
 // Updating member details
-router.put("/memebrs/:id", async (req, res) => {
+router.put("/members/:id", async (req, res) => {
   try {
     const memId = req.params.id;
     const { firstName, lastName, email } = req.body;
 
-    const updateQuery = "UPDATE members SET  firstName = ?, lastName = ?, email = ? WHERE id = ?";
+    const updateQuery = `UPDATE members SET firstName = ?, lastName = ?, email = ? WHERE id = ?`;
 
-    db.query(updateQuery, [[...firstName, firstName], [...lastName, lastName], [...email, email], memId], (error) => {
+    db.query(updateQuery, [firstName, lastName, email, memId], (error, result) => {
       if (error) {
+        console.error(error);
         res.send({message:"Error updating member details ", error: error});
       } else {
+        console.log(result);
         res.status(200).send("Member details update successfully!");
       }
     })
