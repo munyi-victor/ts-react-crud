@@ -3,7 +3,7 @@ import { ButtonWrapper } from "../App.styles";
 
 type Props = {
   showAddPage: () => void;
-}
+};
 const AddButton = (props: Props) => {
   const { showAddPage } = props;
   return (

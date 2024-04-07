@@ -1,26 +1,27 @@
 import React, { useState } from "react";
-import { Form, Button } from "react-bootstrap";
 import axios from "axios";
 
-import { FormData } from "../types/types";
+import { Button, Form } from "react-bootstrap";
+
+import { FormData, Member } from "../types/types";
 
 type Props = {
   backBtn: () => void;
+  data: Member;
 };
-const AddMemberForm = (props: Props) => {
-  // : React.FC
-  const { backBtn } = props;
+const EditMemberFrom = (props: Props) => {
+  const { backBtn, data } = props;
 
   const [formData, setFormData] = useState<FormData>({
-    firstName: "",
-    lastName: "",
-    email: "",
+    firstName: data.firstName,
+    lastName: data.lastName,
+    email: data.email,
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({
-      ...formData,
+      [...formData],
       [name]: value,
     });
   };
@@ -29,22 +30,14 @@ const AddMemberForm = (props: Props) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post(
-        "http://localhost:5000/members",
+      const response = await axios.put(
+        `http://localhost:5000/members/${data.id}`,
         formData
       );
       console.log(response.data);
     } catch (error) {
-      console.error("Error adding member", error);
+      console.error("Error editing member details", error);
     }
-
-    setFormData({
-      firstName: "",
-      lastName: "",
-      email: "",
-    });
-
-    backBtn();
   };
 
   return (
@@ -91,11 +84,11 @@ const AddMemberForm = (props: Props) => {
         </Button>
 
         <Button variant="success" type="submit">
-          Add Member
+          Edit Member
         </Button>
       </div>
     </Form>
   );
 };
 
-export default AddMemberForm;
+export default EditMemberFrom;

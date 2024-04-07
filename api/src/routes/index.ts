@@ -48,14 +48,35 @@ router.post("/members", async (req, res) => {
 // Deleting a member route
 router.delete("/members/:id", async (req, res) => {
   try {
-    const userID = req.params.id;
-    db.query("DELETE FROM members WHERE id = ?", [userID], (error) => {
+    const memId = req.params.id;
+    db.query("DELETE FROM members WHERE id = ?", [memId], (error) => {
       if (error) {
         res.status(500).send({ message: "Error deleting member" , error:error});
       } else {
         res.status(200).send("Member deleted successfully");
       }
     }) 
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal server error");
+  }
+})
+
+// Updating member details
+router.put("/memebrs/:id", async (req, res) => {
+  try {
+    const memId = req.params.id;
+    const { firstName, lastName, email } = req.body;
+
+    const updateQuery = "UPDATE members SET  firstName = ?, lastName = ?, email = ? WHERE id = ?";
+
+    db.query(updateQuery, [[...firstName, firstName], [...lastName, lastName], [...email, email], memId], (error) => {
+      if (error) {
+        res.send({message:"Error updating member details ", error: error});
+      } else {
+        res.status(200).send("Member details update successfully!");
+      }
+    })
   } catch (error) {
     console.error(error);
     res.status(500).send("Internal server error");

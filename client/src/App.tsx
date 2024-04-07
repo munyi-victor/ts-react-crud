@@ -4,6 +4,7 @@ import axios from "axios";
 import AddButton from "./components/AddButton";
 import EmployeeList from "./components/EmployeeList";
 import AddMemberForm from "./components/AddMemberForm";
+import EditMemberForm from "./components/EditMemberForm";
 
 import { GlobalStyle, Wrapper } from "./App.styles";
 import { Container } from "react-bootstrap";
@@ -13,6 +14,8 @@ import { Member, PageEnum } from "./types/types";
 function App() {
   const [members, setMembers] = useState<Member[]>([]);
   const [shownPage, setShownPage] = useState(PageEnum.list);
+
+  const [memberData, setMemberData] = useState(null as unknown as Member || null);
 
   useEffect(() => {
     const getMembers = async () => {
@@ -45,6 +48,11 @@ function App() {
     setShownPage(PageEnum.list);
   }
 
+  const editMemberBtn = (data:Member) => {
+    setShownPage(PageEnum.edit);
+    setMemberData(data);
+  }
+
   return (
     <Container>
       <GlobalStyle />
@@ -53,11 +61,16 @@ function App() {
           {shownPage === PageEnum.list && (
             <div>
               <AddButton showAddPage={showAddPage} />
-              <EmployeeList members={members} deleteMember={deleteMember} />
+              <EmployeeList
+                members={members}
+                deleteMember={deleteMember}
+                editMemberBtn={editMemberBtn}
+              />
             </div>
           )}
 
           {shownPage === PageEnum.add && <AddMemberForm backBtn={backBtn} />}
+          {shownPage === PageEnum.edit && <EditMemberForm backBtn={backBtn} data={memberData} />}
         </div>
       </Wrapper>
     </Container>

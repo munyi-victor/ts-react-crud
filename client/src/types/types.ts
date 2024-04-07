@@ -14,4 +14,5 @@ export type FormData = {
 export enum PageEnum {
   add,
   list,
+  edit,
 }
